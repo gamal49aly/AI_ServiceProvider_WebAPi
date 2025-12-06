@@ -1,4 +1,4 @@
-using AI_ServiceProvider.Data;
+﻿using AI_ServiceProvider.Data;
 using AI_ServiceProvider.Controllers.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +21,8 @@ namespace AI_ServiceProvider
                 options.UseSqlServer(connectionString));
 
             // Add Authentication (JWT)
-            // IMPORTANT: In a real app, store this securely in User Secrets or Azure Key Vault
-            var jwtKey = builder.Configuration.GetValue<string>("JwtSettings:Key") ?? "YourSuperSecretKeyThatIsAtLeast32CharactersLong!";
+            var jwtKey = builder.Configuration.GetValue<string>("JwtSettings:Key")
+                ?? "YourSuperSecretKeyThatIsAtLeast32CharactersLong!";
             var jwtKeyBytes = Encoding.ASCII.GetBytes(jwtKey);
 
             builder.Services.AddAuthentication(options =>
@@ -43,19 +43,29 @@ namespace AI_ServiceProvider
                 };
             });
 
-            
+            // ⭐ ADD CORS POLICY
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200") // Angular dev server
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
+
             builder.Services.AddScoped<IGoogleDriveService, GoogleDriveService>();
-      
+
             // builder.Services.AddScoped<IImageParsingService, YourImageParsingServiceImplementation>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-           
+            // === 2. CONFIGURE THE HTTP REQUEST PIPELINE ===
 
             if (app.Environment.IsDevelopment())
             {
@@ -65,8 +75,10 @@ namespace AI_ServiceProvider
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication(); 
+            // ⭐ USE CORS - MUST BE BEFORE Authentication/Authorization
+            app.UseCors("AllowAngularApp");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

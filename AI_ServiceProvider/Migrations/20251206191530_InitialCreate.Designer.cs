@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AI_ServiceProvider.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251204204756_FixSubscriptionSeedData")]
-    partial class FixSubscriptionSeedData
+    [Migration("20251206191530_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
