@@ -1,0 +1,293 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\controllers\\imageparsercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\controllers\\imageparsercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\controllers\\services\\googledriveserviceinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\controllers\\services\\googledriveserviceinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\controllers\\services\\googledriveservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\controllers\\services\\googledriveservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\dtos\\chatdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\dtos\\chatdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\dtos\\imageparserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\dtos\\imageparserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\dtos\\createchatrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\dtos\\createchatrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\dtos\\registerrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\dtos\\registerrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\models\\imageparserinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\models\\imageparserinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\models\\imageparseroutput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\models\\imageparseroutput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\models\\chat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\models\\chat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|d:\\ai_serviceprovider\\ai_serviceprovider\\ai_serviceprovider\\models\\subsciption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{815CA4AD-0474-4032-875F-0034925BD54A}|AI_ServiceProvider\\AI_ServiceProvider.csproj|solutionrelative:ai_serviceprovider\\models\\subsciption.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "googleDriveServiceInterface.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\Services\\googleDriveServiceInterface.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Controllers\\Services\\googleDriveServiceInterface.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\Services\\googleDriveServiceInterface.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Controllers\\Services\\googleDriveServiceInterface.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T13:46:16.615Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "googleDriveService.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\Services\\googleDriveService.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Controllers\\Services\\googleDriveService.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\Services\\googleDriveService.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Controllers\\Services\\googleDriveService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T13:44:12.018Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "imageParserController.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\imageParserController.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Controllers\\imageParserController.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\imageParserController.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Controllers\\imageParserController.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAAAC8AAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T13:33:57.669Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "imageParserDTO.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\imageParserDTO.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\DTOs\\imageParserDTO.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\imageParserDTO.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\DTOs\\imageParserDTO.cs",
+              "ViewState": "AQIAAAEAAAAAAAAAAAAAABAAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T13:26:48.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "chatDTO.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\chatDTO.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\DTOs\\chatDTO.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\chatDTO.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\DTOs\\chatDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T13:25:40.985Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "chatController.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\chatController.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Controllers\\chatController.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\chatController.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Controllers\\chatController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T13:19:56.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Program.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Program.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Program.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Program.cs",
+              "ViewState": "AQIAACwAAAAAAAAAAAAmwDgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T20:18:53.763Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAACkAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T21:02:33.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CreateChatRequestDTO.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\CreateChatRequestDTO.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\DTOs\\CreateChatRequestDTO.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\CreateChatRequestDTO.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\DTOs\\CreateChatRequestDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T21:00:38.557Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "RegisterRequestDTO.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\RegisterRequestDTO.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\DTOs\\RegisterRequestDTO.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\DTOs\\RegisterRequestDTO.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\DTOs\\RegisterRequestDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T20:59:25.364Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\appsettings.json",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\appsettings.json",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\appsettings.json",
+              "RelativeToolTip": "AI_ServiceProvider\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA7AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-04T20:10:10.051Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Data\\AppDbContext.cs",
+              "ViewState": "AQIAACMAAAAAAAAAAAAUwDMAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T20:04:29.934Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ImageParserOutput.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\ImageParserOutput.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Models\\ImageParserOutput.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\ImageParserOutput.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Models\\ImageParserOutput.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T19:48:29.666Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ImageParserInput.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\ImageParserInput.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Models\\ImageParserInput.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\ImageParserInput.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Models\\ImageParserInput.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T19:47:48.624Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Chat.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\Chat.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Models\\Chat.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\Chat.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Models\\Chat.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T19:46:10.356Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\User.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Models\\User.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\User.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Models\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T19:45:17.082Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Subsciption.cs",
+              "DocumentMoniker": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\Subsciption.cs",
+              "RelativeDocumentMoniker": "AI_ServiceProvider\\Models\\Subsciption.cs",
+              "ToolTip": "D:\\AI_ServiceProvider\\AI_ServiceProvider\\AI_ServiceProvider\\Models\\Subsciption.cs",
+              "RelativeToolTip": "AI_ServiceProvider\\Models\\Subsciption.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-04T19:43:40.251Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
