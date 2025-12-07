@@ -21,9 +21,9 @@ namespace AI_ServiceProvider
                 options.UseSqlServer(connectionString));
 
             // JWT Authentication Service
-            var jwtKey = builder.Configuration.GetValue<string>("JwtSettings:Key")
-                ?? "YourSuperSecretKeyThatIsAtLeast32CharactersLong!";
-            var jwtKeyBytes = Encoding.ASCII.GetBytes(jwtKey);
+            var jwtKey = builder.Configuration["JwtSettings:Key"]
+            ?? throw new InvalidOperationException("JWT key not configured.");
+            var keyBytes = Encoding.ASCII.GetBytes(jwtKey);
 
             builder.Services.AddAuthentication(options =>
             {
@@ -32,14 +32,14 @@ namespace AI_ServiceProvider
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(jwtKeyBytes),
+                    IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 

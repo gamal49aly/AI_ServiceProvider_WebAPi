@@ -88,84 +88,115 @@ namespace AI_ServiceProvider.Controllers
         [HttpPost("create-checkout-session")]
         public async Task<IActionResult> CreateCheckoutSession([FromBody] CreateCheckoutSessionRequestDTO request)
         {
-            var userId = Guid.Parse(User.FindFirst("id")?.Value!);
-            var user = await _context.Users.FindAsync(userId);
-
-            if (user == null)
-                return NotFound("User not found");
-
-            var subscription = await _context.Subscriptions.FindAsync(request.SubscriptionId);
-            if (subscription == null)
-                return NotFound("Subscription plan not found");
-
-            if (subscription.Price == 0)
-                return BadRequest("Cannot purchase free tier");
-
-            // Create or retrieve Stripe customer
-            if (string.IsNullOrEmpty(user.StripeCustomerId))
+            try
             {
-                var customerOptions = new CustomerCreateOptions
+                // Check if user is authenticated
+                var userIdClaim = User.FindFirst("id")?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
                 {
-                    Email = user.Email,
-                    Name = user.DisplayName,
-                    Metadata = new Dictionary<string, string>
+                    return Unauthorized("User ID not found in token");
+                }
+
+                var userId = Guid.Parse(userIdClaim);
+                var user = await _context.Users.FindAsync(userId);
+
+                if (user == null)
+                    return NotFound(new { error = "User not found" });
+
+                var subscription = await _context.Subscriptions.FindAsync(request.SubscriptionId);
+                if (subscription == null)
+                    return NotFound(new { error = "Subscription plan not found" });
+
+                if (subscription.Price == 0)
+                    return BadRequest(new { error = "Cannot purchase free tier" });
+
+                // Check Stripe configuration
+                var stripeSecretKey = _configuration["StripeSettings:SecretKey"];
+                var stripePublishableKey = _configuration["StripeSettings:PublishableKey"];
+
+                if (string.IsNullOrEmpty(stripeSecretKey) || string.IsNullOrEmpty(stripePublishableKey))
+                {
+                    return StatusCode(500, new { error = "Stripe is not configured. Please add Stripe keys to appsettings.json" });
+                }
+
+                // Create or retrieve Stripe customer
+                if (string.IsNullOrEmpty(user.StripeCustomerId))
+                {
+                    var customerOptions = new CustomerCreateOptions
                     {
-                        { "UserId", user.Id.ToString() }
-                    }
+                        Email = user.Email,
+                        Name = user.DisplayName,
+                        Metadata = new Dictionary<string, string>
+                {
+                    { "UserId", user.Id.ToString() }
+                }
+                    };
+
+                    var customerService = new CustomerService();
+                    var customer = await customerService.CreateAsync(customerOptions);
+                    user.StripeCustomerId = customer.Id;
+                    await _context.SaveChangesAsync();
+                }
+
+                var origin = Request.Headers["Origin"].ToString();
+                if (string.IsNullOrEmpty(origin))
+                {
+                    origin = "http://localhost:4200";
+                }
+
+                var options = new SessionCreateOptions
+                {
+                    PaymentMethodTypes = new List<string> { "card" },
+                    LineItems = new List<SessionLineItemOptions>
+            {
+                new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = subscription.Name,
+                            Description = $"{subscription.MaxUsagePerMonth} requests per {subscription.BillingCycle}"
+                        },
+                        UnitAmount = (long)(subscription.Price * 100),
+                        Recurring = new SessionLineItemPriceDataRecurringOptions
+                        {
+                            Interval = subscription.BillingCycle == "yearly" ? "year" : "month"
+                        }
+                    },
+                    Quantity = 1
+                }
+            },
+                    Mode = "subscription",
+                    SuccessUrl = $"{origin}/subscription/success?session_id={{CHECKOUT_SESSION_ID}}",
+                    CancelUrl = $"{origin}/subscription/cancel",
+                    Customer = user.StripeCustomerId,
+                    Metadata = new Dictionary<string, string>
+            {
+                { "UserId", user.Id.ToString() },
+                { "SubscriptionId", subscription.Id.ToString() }
+            }
                 };
 
-                var customerService = new CustomerService();
-                var customer = await customerService.CreateAsync(customerOptions);
-                user.StripeCustomerId = customer.Id;
-                await _context.SaveChangesAsync();
+                var service = new SessionService();
+                var session = await service.CreateAsync(options);
+
+                return Ok(new CreateCheckoutSessionResponseDTO
+                {
+                    SessionId = session.Id,
+                    PublishableKey = stripePublishableKey
+                });
             }
-
-            // Create Checkout Session
-            var options = new SessionCreateOptions
+            catch (StripeException ex)
             {
-                PaymentMethodTypes = new List<string> { "card" },
-                LineItems = new List<SessionLineItemOptions>
-                {
-                    new SessionLineItemOptions
-                    {
-                        PriceData = new SessionLineItemPriceDataOptions
-                        {
-                            Currency = "usd",
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = subscription.Name,
-                                Description = $"{subscription.MaxUsagePerMonth} requests per {subscription.BillingCycle}"
-                            },
-                            UnitAmount = (long)(subscription.Price * 100),
-                            Recurring = new SessionLineItemPriceDataRecurringOptions
-                            {
-                                Interval = subscription.BillingCycle == "yearly" ? "year" : "month"
-                            }
-                        },
-                        Quantity = 1
-                    }
-                },
-                Mode = "subscription",
-                SuccessUrl = $"{Request.Headers["Origin"]}/subscription/success?session_id={{CHECKOUT_SESSION_ID}}",
-                CancelUrl = $"{Request.Headers["Origin"]}/subscription/cancel",
-                Customer = user.StripeCustomerId,
-                Metadata = new Dictionary<string, string>
-                {
-                    { "UserId", user.Id.ToString() },
-                    { "SubscriptionId", subscription.Id.ToString() }
-                }
-            };
-
-            var service = new SessionService();
-            var session = await service.CreateAsync(options);
-
-            return Ok(new CreateCheckoutSessionResponseDTO
+                return StatusCode(500, new { error = "Stripe API error", message = ex.Message, stripeError = ex.StripeError?.Message });
+            }
+            catch (Exception ex)
             {
-                SessionId = session.Id,
-                PublishableKey = _configuration["StripeSettings:PublishableKey"]!
-            });
+                return StatusCode(500, new { error = "Internal server error", message = ex.Message, stackTrace = ex.StackTrace });
+            }
         }
-
         // POST: api/Subscription/webhook
         [HttpPost("webhook")]
         [AllowAnonymous]
