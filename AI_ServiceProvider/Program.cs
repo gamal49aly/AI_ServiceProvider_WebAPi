@@ -13,14 +13,14 @@ namespace AI_ServiceProvider
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // === 1. ADD SERVICES TO THE CONTAINER ===
+            // Services 
 
-            // Add DbContext
+            // Add DbContext Service
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            // Add Authentication (JWT)
+            // JWT Authentication Service
             var jwtKey = builder.Configuration.GetValue<string>("JwtSettings:Key")
                 ?? "YourSuperSecretKeyThatIsAtLeast32CharactersLong!";
             var jwtKeyBytes = Encoding.ASCII.GetBytes(jwtKey);
@@ -43,7 +43,7 @@ namespace AI_ServiceProvider
                 };
             });
 
-            // ⭐ ADD CORS POLICY
+            // CORS POLICY
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularApp", policy =>
@@ -65,7 +65,6 @@ namespace AI_ServiceProvider
 
             var app = builder.Build();
 
-            // === 2. CONFIGURE THE HTTP REQUEST PIPELINE ===
 
             if (app.Environment.IsDevelopment())
             {
@@ -75,7 +74,6 @@ namespace AI_ServiceProvider
 
             app.UseHttpsRedirection();
 
-            // ⭐ USE CORS - MUST BE BEFORE Authentication/Authorization
             app.UseCors("AllowAngularApp");
 
             app.UseAuthentication();
