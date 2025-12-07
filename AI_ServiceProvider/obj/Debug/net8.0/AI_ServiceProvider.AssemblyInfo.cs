@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AI_ServiceProvider")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30fdcd220036361ae9229a7aa322e0258d8174b9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2a14f098373a2c362b2ab8f91df21f19d6ff9a6e")]
 [assembly: System.Reflection.AssemblyProductAttribute("AI_ServiceProvider")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AI_ServiceProvider")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

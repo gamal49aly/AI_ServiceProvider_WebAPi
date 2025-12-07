@@ -28,6 +28,13 @@ namespace AI_ServiceProvider.Models
         [ForeignKey("SubscriptionId")]
         public virtual Subscription? Subscription { get; set; }
 
+        // Stripe Integration
+        [MaxLength(100)]
+        public string? StripeCustomerId { get; set; }
+        [MaxLength(100)]
+        public string? StripeSubscriptionId { get; set; }
+        public DateTime? SubscriptionExpiresAt { get; set; }
+
         public virtual ICollection<Chat> Chats { get; set; } = new List<Chat>();
     }
 }

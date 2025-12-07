@@ -22,5 +22,13 @@ namespace AI_ServiceProvider.Models
         public int MaxUsagePerMonth { get; set; } // -1 for unlimited
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Stripe Integration Fields
+        [MaxLength(100)]
+        public string? StripePriceId { get; set; } // Stripe Price ID
+
+        [MaxLength(100)]
+        public string? StripeProductId { get; set; } // Stripe Product ID
+
     }
 }
