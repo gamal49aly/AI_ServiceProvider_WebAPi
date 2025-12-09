@@ -1,4 +1,4 @@
-﻿using AI_ServiceProvider.Data;
+using AI_ServiceProvider.Data;
 using AI_ServiceProvider.DTOs;
 using AI_ServiceProvider.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -65,7 +65,6 @@ namespace AI_ServiceProvider.Controllers
             if (user == null)
                 return NotFound("User not found");
 
-            // Calculate usage
             var usageThisMonth = await _context.ImageParserInputs
                 .Where(i => i.Chat.UserId == userId &&
                            i.UploadedAt.Month == DateTime.UtcNow.Month &&
@@ -84,94 +83,70 @@ namespace AI_ServiceProvider.Controllers
             return Ok(status);
         }
 
+
         // POST: api/Subscription/create-checkout-session
         [HttpPost("create-checkout-session")]
         public async Task<IActionResult> CreateCheckoutSession([FromBody] CreateCheckoutSessionRequestDTO request)
         {
             try
             {
-                // Check if user is authenticated
+                // Validate user
                 var userIdClaim = User.FindFirst("id")?.Value;
                 if (string.IsNullOrEmpty(userIdClaim))
-                {
-                    return Unauthorized("User ID not found in token");
-                }
+                    return Unauthorized("User ID missing in token");
 
                 var userId = Guid.Parse(userIdClaim);
                 var user = await _context.Users.FindAsync(userId);
-
                 if (user == null)
                     return NotFound(new { error = "User not found" });
 
+                // Validate subscription plan
                 var subscription = await _context.Subscriptions.FindAsync(request.SubscriptionId);
                 if (subscription == null)
                     return NotFound(new { error = "Subscription plan not found" });
 
-                if (subscription.Price == 0)
-                    return BadRequest(new { error = "Cannot purchase free tier" });
+                if (string.IsNullOrEmpty(subscription.StripePriceId))
+                    return BadRequest(new { error = "Stripe price ID is missing for this plan" });
 
-                // Check Stripe configuration
+                if (subscription.Price == 0)
+                    return BadRequest(new { error = "Cannot purchase free plan" });
+
+                // Read Stripe keys
                 var stripeSecretKey = _configuration["StripeSettings:SecretKey"];
                 var stripePublishableKey = _configuration["StripeSettings:PublishableKey"];
 
                 if (string.IsNullOrEmpty(stripeSecretKey) || string.IsNullOrEmpty(stripePublishableKey))
-                {
-                    return StatusCode(500, new { error = "Stripe is not configured. Please add Stripe keys to appsettings.json" });
-                }
+                    return StatusCode(500, new { error = "Stripe is not configured correctly" });
 
-                // Create or retrieve Stripe customer
-                if (string.IsNullOrEmpty(user.StripeCustomerId))
-                {
-                    var customerOptions = new CustomerCreateOptions
-                    {
-                        Email = user.Email,
-                        Name = user.DisplayName,
-                        Metadata = new Dictionary<string, string>
-                {
-                    { "UserId", user.Id.ToString() }
-                }
-                    };
+                StripeConfiguration.ApiKey = stripeSecretKey;
 
-                    var customerService = new CustomerService();
-                    var customer = await customerService.CreateAsync(customerOptions);
-                    user.StripeCustomerId = customer.Id;
-                    await _context.SaveChangesAsync();
-                }
+                // Get frontend URL properly (no more Origin headers)
+                var clientBaseUrl = _configuration["ClientSettings:BaseUrl"]; // e.g., https://localhost:4200
 
-                var origin = Request.Headers["Origin"].ToString();
-                if (string.IsNullOrEmpty(origin))
-                {
-                    origin = "http://localhost:4200";
-                }
+                if (string.IsNullOrEmpty(clientBaseUrl))
+                    clientBaseUrl = $"{Request.Scheme}://{Request.Host}";
 
+                // Create Stripe Checkout Session
                 var options = new SessionCreateOptions
                 {
+                    Mode = "subscription",
                     PaymentMethodTypes = new List<string> { "card" },
+
                     LineItems = new List<SessionLineItemOptions>
             {
                 new SessionLineItemOptions
                 {
-                    PriceData = new SessionLineItemPriceDataOptions
-                    {
-                        Currency = "usd",
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
-                        {
-                            Name = subscription.Name,
-                            Description = $"{subscription.MaxUsagePerMonth} requests per {subscription.BillingCycle}"
-                        },
-                        UnitAmount = (long)(subscription.Price * 100),
-                        Recurring = new SessionLineItemPriceDataRecurringOptions
-                        {
-                            Interval = subscription.BillingCycle == "yearly" ? "year" : "month"
-                        }
-                    },
+                    Price = subscription.StripePriceId,
                     Quantity = 1
                 }
             },
-                    Mode = "subscription",
-                    SuccessUrl = $"{origin}/subscription/success?session_id={{CHECKOUT_SESSION_ID}}",
-                    CancelUrl = $"{origin}/subscription/cancel",
-                    Customer = user.StripeCustomerId,
+
+                    SuccessUrl = $"{clientBaseUrl}/subscription/success?session_id={{CHECKOUT_SESSION_ID}}",
+                    CancelUrl = $"{clientBaseUrl}/subscription/cancel",
+
+                    CustomerEmail = user.Email,
+                    ClientReferenceId = user.Id.ToString(),
+
                     Metadata = new Dictionary<string, string>
             {
                 { "UserId", user.Id.ToString() },
@@ -185,18 +160,32 @@ namespace AI_ServiceProvider.Controllers
                 return Ok(new CreateCheckoutSessionResponseDTO
                 {
                     SessionId = session.Id,
+                    SessionUrl = session.Url,
                     PublishableKey = stripePublishableKey
                 });
             }
             catch (StripeException ex)
             {
-                return StatusCode(500, new { error = "Stripe API error", message = ex.Message, stripeError = ex.StripeError?.Message });
+                return StatusCode(500, new
+                {
+                    error = "Stripe API error",
+                    message = ex.Message,
+                    stripeError = ex.StripeError?.Message
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = "Internal server error", message = ex.Message, stackTrace = ex.StackTrace });
+                return StatusCode(500, new
+                {
+                    error = "Internal server error",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
+
+
+
         // POST: api/Subscription/webhook
         [HttpPost("webhook")]
         [AllowAnonymous]
@@ -239,7 +228,7 @@ namespace AI_ServiceProvider.Controllers
 
         private async Task HandleCheckoutSessionCompleted(Session session)
         {
-            var userId = Guid.Parse(session.Metadata["UserId"]);
+            var userId = Guid.Parse(session.ClientReferenceId ?? session.Metadata["UserId"]);
             var subscriptionId = Guid.Parse(session.Metadata["SubscriptionId"]);
 
             var user = await _context.Users.FindAsync(userId);
@@ -250,7 +239,6 @@ namespace AI_ServiceProvider.Controllers
                 user.SubscriptionId = subscriptionId;
                 user.StripeSubscriptionId = session.SubscriptionId;
 
-                // Calculate expiration based on billing cycle
                 if (subscription?.BillingCycle == "yearly")
                 {
                     user.SubscriptionExpiresAt = DateTime.UtcNow.AddYears(1);
@@ -272,7 +260,6 @@ namespace AI_ServiceProvider.Controllers
 
             if (user != null)
             {
-                // Manually calculate next billing date
                 if (user.Subscription?.BillingCycle == "yearly")
                 {
                     user.SubscriptionExpiresAt = DateTime.UtcNow.AddYears(1);
@@ -293,7 +280,6 @@ namespace AI_ServiceProvider.Controllers
 
             if (user != null)
             {
-                // Set back to Free Tier
                 var freeTier = await _context.Subscriptions
                     .FirstOrDefaultAsync(s => s.Name == "Free Tier");
 
