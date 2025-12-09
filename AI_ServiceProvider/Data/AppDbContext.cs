@@ -1,4 +1,4 @@
-﻿//namespace AI_ServiceProvider.Data
+//namespace AI_ServiceProvider.Data
 using AI_ServiceProvider.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,30 +40,36 @@ namespace AI_ServiceProvider.Data
                     Price = 0,
                     BillingCycle = "monthly",
                     MaxUsagePerMonth = 10,
-                    // Use a static, hardcoded DateTime
-                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    StripePriceId = null,
+                    StripeProductId = null
                 },
-        new Subscription
-        {
-            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-            Name = "Pro Plan",
-            Price = 29.99m,
-            BillingCycle = "monthly",
-            MaxUsagePerMonth = 500,
-            // Use a static, hardcoded DateTime
-            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-        },
-        new Subscription
-        {
-            Id = new Guid("33333333-3333-3333-3333-333333333333"),
-            Name = "Enterprise",
-            Price = 199.99m,
-            BillingCycle = "monthly",
-            MaxUsagePerMonth = -1,
-            // Use a static, hardcoded DateTime
-            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-        }
+                new Subscription
+                {
+                    Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                    Name = "Pro Plan",
+                    Price = 29.99m,
+                    BillingCycle = "monthly",
+                    MaxUsagePerMonth = 500,
+                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+
+                    StripePriceId = "price_1ScBw0PM8gQYkbOp2T1VaDW7",
+                    StripeProductId = "prod_TZKbRasmUd0XZH"
+                },
+                new Subscription
+                {
+                    Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                    Name = "Enterprise",
+                    Price = 199.99m,
+                    BillingCycle = "yearly",
+                    MaxUsagePerMonth = -1,
+                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+
+                    StripePriceId = "price_1ScByQPM8gQYkbOpcHC1WMnp",
+                    StripeProductId = "prod_TZKdMmuEa6w1C3"
+                }
             );
         }
     }
+
 }
