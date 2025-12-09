@@ -11,6 +11,7 @@ namespace AI_ServiceProvider.DTOs
     public class CreateCheckoutSessionResponseDTO
     {
         public string SessionId { get; set; }
+        public string SessionUrl { get; set; }
         public string PublishableKey { get; set; }
     }
 
