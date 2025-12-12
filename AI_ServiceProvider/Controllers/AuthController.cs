@@ -1,6 +1,7 @@
 ﻿using AI_ServiceProvider.Data;
 using AI_ServiceProvider.DTOs;
 using AI_ServiceProvider.Models;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,10 +16,12 @@ namespace AI_ServiceProvider.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(ApplicationDbContext context)
+        public AuthController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            configuration = _configuration;
         }
 
         [HttpPost("register")]
@@ -91,6 +94,81 @@ namespace AI_ServiceProvider.Controllers
                     displayName = user.DisplayName
                 }
             });
+        }
+
+
+
+
+    [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequestDTO request)
+        {
+            try
+            {
+                // Verify Google ID token
+                var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken);
+
+                // Check if user exists
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == payload.Email);
+
+                if (user == null)
+                {
+                    // Create new user
+                    user = new User
+                    {
+                        Email = payload.Email,
+                        DisplayName = payload.Name,
+                        PasswordHash = string.Empty, // No password for Google users
+                        SubscriptionId = new Guid("11111111-1111-1111-1111-111111111111") // Free Tier
+                    };
+
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+
+                var token = GenerateJwtToken(user);
+
+                return Ok(new
+                {
+                    token = token,
+                    user = new
+                    {
+                        id = user.Id,
+                        email = user.Email,
+                        displayName = user.DisplayName
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = "Invalid Google token", message = ex.Message });
+            }
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var jwtKey = _configuration.GetValue<string>("JwtSettings:Key")
+                         ?? throw new InvalidOperationException("JWT key not configured.");
+            var keyBytes = Encoding.ASCII.GetBytes(jwtKey);
+
+            var claims = new[]
+            {
+                new Claim("id", user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("displayName", user.DisplayName ?? string.Empty)
+            };
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(keyBytes),
+                    SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }
