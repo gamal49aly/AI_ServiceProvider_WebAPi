@@ -20,13 +20,14 @@ namespace AI_ServiceProvider.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IGoogleDriveService _googleDriveService;
-        private readonly IImageParsingService _imageParsingService; // Service for AI communication
-
-        public ImageParserController(ApplicationDbContext context, IGoogleDriveService googleDriveService, IImageParsingService imageParsingService)
+        private readonly IImageParsingService _imageParsingService; // Service for AI API 
+        private readonly IConfiguration _configuration;
+        public ImageParserController(ApplicationDbContext context, IGoogleDriveService googleDriveService, IImageParsingService imageParsingService, IConfiguration configuration)
         {
             _context = context;
             _googleDriveService = googleDriveService;
             _imageParsingService = imageParsingService;
+            _configuration = configuration;
         }
 
         [HttpPost("parse")]
@@ -53,7 +54,7 @@ namespace AI_ServiceProvider.Controllers
             }
 
             // Upload Image to Google Drive for Chat History
-            var folderId = "your-google-drive-folder-id"; // Get from config
+            var folderId = _configuration["GoogleDriveSettings:FolderId"]; // Get from config
             var imageUrl = await _googleDriveService.UploadFileAsync(request.Image, folderId);
             if (string.IsNullOrEmpty(imageUrl))
             {
@@ -78,7 +79,7 @@ namespace AI_ServiceProvider.Controllers
             _context.ImageParserOutputs.Add(output);
             await _context.SaveChangesAsync();
 
-            // 6. Return Response
+          
             return Ok(new ParseImageResponseDto { InputId = input.Id, ParsedData = output.ParsedData });
         }
 

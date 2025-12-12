@@ -57,14 +57,14 @@ namespace AI_ServiceProvider
 
             builder.Services.AddScoped<IGoogleDriveService, GoogleDriveService>();
 
-            // builder.Services.AddScoped<IImageParsingService, YourImageParsingServiceImplementation>();
+            // Keep your real image parsing service implementation
+            builder.Services.AddScoped<IImageParsingService, ImageParsingService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
 
             if (app.Environment.IsDevelopment())
             {
