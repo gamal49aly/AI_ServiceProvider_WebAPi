@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 namespace AI_ServiceProvider
 {
     public class Program
@@ -57,7 +58,7 @@ namespace AI_ServiceProvider
 
             builder.Services.AddScoped<IGoogleDriveService, GoogleDriveService>();
 
-            // builder.Services.AddScoped<IImageParsingService, YourImageParsingServiceImplementation>();
+             builder.Services.AddScoped<IImageParsingService, ImageParsingService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
