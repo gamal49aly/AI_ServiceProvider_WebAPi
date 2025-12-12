@@ -52,7 +52,7 @@ namespace AI_ServiceProvider.Controllers.Services
 
             // Make the file publicly accessible so anyone with the link can view it
             var permission = new Google.Apis.Drive.v3.Data.Permission()
-            {
+        {
                 Type = "anyone",
                 Role = "reader"
             };

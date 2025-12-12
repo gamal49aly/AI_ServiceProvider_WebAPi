@@ -105,4 +105,10 @@ namespace AI_ServiceProvider.Controllers
         }
     }
 
+    // Placeholder interface  AI service
+    public interface IImageParsingService
+    {
+        Task<string> ParseImageAsync(Stream imageStream, string jsonKeys);
+    }
+
 }
