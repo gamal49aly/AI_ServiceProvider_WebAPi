@@ -17,22 +17,13 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AI_ServiceProvider
 build_property.RootNamespace = AI_ServiceProvider
-<<<<<<< HEAD
-build_property.ProjectDir = D:\AI_ServiceProvider\New folder\AI_ServiceProvider_WebAPi-main\AI_ServiceProvider_WebAPi-main\AI_ServiceProvider\
-=======
 build_property.ProjectDir = X:\ITI\Graduation_Project\AI_ServiceProvider_WebAPi\AI_ServiceProvider\
->>>>>>> c1baa91ebe4e53be20a3e4ba0a4925693d284f36
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-<<<<<<< HEAD
-build_property.MSBuildProjectDirectory = D:\AI_ServiceProvider\New folder\AI_ServiceProvider_WebAPi-main\AI_ServiceProvider_WebAPi-main\AI_ServiceProvider
-build_property._RazorSourceGeneratorDebug = 
-=======
 build_property.MSBuildProjectDirectory = X:\ITI\Graduation_Project\AI_ServiceProvider_WebAPi\AI_ServiceProvider
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
->>>>>>> c1baa91ebe4e53be20a3e4ba0a4925693d284f36

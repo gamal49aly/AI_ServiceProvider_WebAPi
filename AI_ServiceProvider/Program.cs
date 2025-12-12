@@ -56,6 +56,7 @@ namespace AI_ServiceProvider
             });
 
             builder.Services.AddScoped<IGoogleDriveService, GoogleDriveService>();
+            builder.Services.AddHttpClient();
 
             // Keep your real image parsing service implementation
             builder.Services.AddScoped<IImageParsingService, ImageParsingService>();
