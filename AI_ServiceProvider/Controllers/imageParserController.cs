@@ -19,13 +19,12 @@ namespace AI_ServiceProvider.Controllers
     public class ImageParserController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IGoogleDriveService _googleDriveService;
+        //private readonly IGoogleDriveService _googleDriveService;
         private readonly IImageParsingService _imageParsingService; // Service for AI API 
         private readonly IConfiguration _configuration;
-        public ImageParserController(ApplicationDbContext context, IGoogleDriveService googleDriveService, IImageParsingService imageParsingService, IConfiguration configuration)
+        public ImageParserController(ApplicationDbContext context, IImageParsingService imageParsingService, IConfiguration configuration)
         {
             _context = context;
-            _googleDriveService = googleDriveService;
             _imageParsingService = imageParsingService;
             _configuration = configuration;
         }
@@ -50,37 +49,37 @@ namespace AI_ServiceProvider.Controllers
             string aiResponse;
             using (var stream = request.Image.OpenReadStream())
             {
-                aiResponse = await _imageParsingService.ParseImageAsync(stream, request.JsonKeys);
+                // Pass the content type from the IFormFile to the service
+                aiResponse = await _imageParsingService.ParseImageAsync(stream, request.Image.ContentType, request.JsonKeys);
             }
 
             // Upload Image to Google Drive for Chat History
-            var folderId = _configuration["GoogleDriveSettings:FolderId"]; // Get from config
-            var imageUrl = await _googleDriveService.UploadFileAsync(request.Image, folderId);
-            if (string.IsNullOrEmpty(imageUrl))
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to save image for history.");
-            }
+            //var folderId = _configuration["GoogleDriveSettings:FolderId"]; // Get from config
+            //var imageUrl = await _googleDriveService.UploadFileAsync(request.Image, folderId);
+            //if (string.IsNullOrEmpty(imageUrl))
+            //{
+            //    return StatusCode(StatusCodes.Status500InternalServerError, "Failed to save image for history.");
+            //}
 
-            //Save Results to Database
-            var input = new ImageParserInput
-            {
-                ChatId = request.ChatId,
-                ImageUrl = imageUrl,
-                JsonSchema = request.JsonKeys
-            };
-            _context.ImageParserInputs.Add(input);
-            await _context.SaveChangesAsync();
+            ////Save Results to Database
+            //var input = new ImageParserInput
+            //{
+            //    ChatId = request.ChatId,
+            //    ImageUrl = imageUrl,
+            //    JsonSchema = request.JsonKeys
+            //};
+            //_context.ImageParserInputs.Add(input);
+            //await _context.SaveChangesAsync();
 
-            var output = new ImageParserOutput
-            {
-                InputId = input.Id,
-                ParsedData = aiResponse
-            };
-            _context.ImageParserOutputs.Add(output);
-            await _context.SaveChangesAsync();
+            //var output = new ImageParserOutput
+            //{
+            //    InputId = input.Id,
+            //    ParsedData = aiResponse
+            //};
+            //_context.ImageParserOutputs.Add(output);
+            //await _context.SaveChangesAsync();
 
-          
-            return Ok(new ParseImageResponseDto { InputId = input.Id, ParsedData = output.ParsedData });
+            return Ok(aiResponse);
         }
 
         private Guid? GetUserId()
@@ -105,10 +104,5 @@ namespace AI_ServiceProvider.Controllers
         }
     }
 
-    // Placeholder interface  AI service
-    public interface IImageParsingService
-    {
-        Task<string> ParseImageAsync(Stream imageStream, string jsonKeys);
-    }
 
 }

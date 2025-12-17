@@ -21,7 +21,7 @@ namespace AI_ServiceProvider.Controllers
         public AuthController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
-            configuration = _configuration;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -67,7 +67,7 @@ namespace AI_ServiceProvider.Controllers
 
             var claims = new[]
             {
-        new Claim("id", user.Id.ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(JwtRegisteredClaimNames.Email, user.Email),
         new Claim("displayName", user.DisplayName ?? string.Empty)
     };
@@ -152,7 +152,7 @@ namespace AI_ServiceProvider.Controllers
 
             var claims = new[]
             {
-                new Claim("id", user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("displayName", user.DisplayName ?? string.Empty)
             };

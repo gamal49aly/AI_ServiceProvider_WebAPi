@@ -4,7 +4,7 @@
     // Placeholder interface  AI service
     public interface IImageParsingService
     {
-        Task<string> ParseImageAsync(Stream imageStream, string jsonKeys);
+        Task<string> ParseImageAsync(Stream imageStream, string contentType, string jsonKeys);
     }
 
 }

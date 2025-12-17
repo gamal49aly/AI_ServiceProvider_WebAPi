@@ -43,6 +43,14 @@ namespace AI_ServiceProvider
                 };
             });
 
+            //builder.Services.AddScoped<IGoogleDriveService, GoogleDriveService>();
+            builder.Services.AddHttpClient();
+
+            // Keep your real image parsing service implementation
+            builder.Services.AddScoped<IImageParsingService, ImageParsingService>();
+            builder.Services.AddScoped<ISpeechToTextService, SpeechToTextService>();
+            builder.Services.AddScoped<ITextToSpeechService, TextToSpeechService>();
+
             // CORS POLICY
             builder.Services.AddCors(options =>
             {
@@ -55,11 +63,6 @@ namespace AI_ServiceProvider
                 });
             });
 
-            builder.Services.AddScoped<IGoogleDriveService, GoogleDriveService>();
-            builder.Services.AddHttpClient();
-
-            // Keep your real image parsing service implementation
-            builder.Services.AddScoped<IImageParsingService, ImageParsingService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

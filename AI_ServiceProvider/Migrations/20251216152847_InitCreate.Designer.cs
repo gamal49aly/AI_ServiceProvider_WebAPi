@@ -4,6 +4,7 @@ using AI_ServiceProvider.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AI_ServiceProvider.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251216152847_InitCreate")]
+    partial class InitCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,58 +100,6 @@ namespace AI_ServiceProvider.Migrations
                     b.ToTable("ImageParserOutputs");
                 });
 
-            modelBuilder.Entity("AI_ServiceProvider.Models.SpeechToTextInput", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("AudioData")
-                        .IsRequired()
-                        .HasMaxLength(20971520)
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("OriginalFileName")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("SpeechToTextInputs");
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.SpeechToTextOutput", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("GeneratedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("InputId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TranscribedText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InputId")
-                        .IsUnique();
-
-                    b.ToTable("SpeechToTextOutputs");
-                });
-
             modelBuilder.Entity("AI_ServiceProvider.Models.Subscription", b =>
                 {
                     b.Property<Guid>("Id")
@@ -218,59 +169,6 @@ namespace AI_ServiceProvider.Migrations
                             StripePriceId = "price_1ScByQPM8gQYkbOpcHC1WMnp",
                             StripeProductId = "prod_TZKdMmuEa6w1C3"
                         });
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.TextToSpeechInput", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InputText")
-                        .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VoiceSettings")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("TextToSpeechInputs");
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.TextToSpeechOutput", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("AudioData")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("varbinary(500)");
-
-                    b.Property<DateTime>("GeneratedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("InputId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InputId")
-                        .IsUnique();
-
-                    b.ToTable("TextToSpeechOutputs");
                 });
 
             modelBuilder.Entity("AI_ServiceProvider.Models.User", b =>
@@ -351,50 +249,6 @@ namespace AI_ServiceProvider.Migrations
                     b.Navigation("Input");
                 });
 
-            modelBuilder.Entity("AI_ServiceProvider.Models.SpeechToTextInput", b =>
-                {
-                    b.HasOne("AI_ServiceProvider.Models.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.SpeechToTextOutput", b =>
-                {
-                    b.HasOne("AI_ServiceProvider.Models.SpeechToTextInput", "Input")
-                        .WithOne("Output")
-                        .HasForeignKey("AI_ServiceProvider.Models.SpeechToTextOutput", "InputId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Input");
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.TextToSpeechInput", b =>
-                {
-                    b.HasOne("AI_ServiceProvider.Models.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.TextToSpeechOutput", b =>
-                {
-                    b.HasOne("AI_ServiceProvider.Models.TextToSpeechInput", "Input")
-                        .WithOne("Output")
-                        .HasForeignKey("AI_ServiceProvider.Models.TextToSpeechOutput", "InputId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Input");
-                });
-
             modelBuilder.Entity("AI_ServiceProvider.Models.User", b =>
                 {
                     b.HasOne("AI_ServiceProvider.Models.Subscription", "Subscription")
@@ -410,16 +264,6 @@ namespace AI_ServiceProvider.Migrations
                 });
 
             modelBuilder.Entity("AI_ServiceProvider.Models.ImageParserInput", b =>
-                {
-                    b.Navigation("Output");
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.SpeechToTextInput", b =>
-                {
-                    b.Navigation("Output");
-                });
-
-            modelBuilder.Entity("AI_ServiceProvider.Models.TextToSpeechInput", b =>
                 {
                     b.Navigation("Output");
                 });

@@ -15,7 +15,10 @@ namespace AI_ServiceProvider.Data
         public DbSet<Chat> Chats { get; set; }
         public DbSet<ImageParserInput> ImageParserInputs { get; set; }
         public DbSet<ImageParserOutput> ImageParserOutputs { get; set; }
-
+        public DbSet<TextToSpeechInput> TextToSpeechInputs { get; set; }
+        public DbSet<TextToSpeechOutput> TextToSpeechOutputs { get; set; }
+        public DbSet<SpeechToTextInput> SpeechToTextInputs { get; set; }
+        public DbSet<SpeechToTextOutput> SpeechToTextOutputs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

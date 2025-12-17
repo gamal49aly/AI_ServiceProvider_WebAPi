@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Text;
 
 namespace AI_ServiceProvider.Controllers.Services
 {
@@ -9,22 +11,28 @@ namespace AI_ServiceProvider.Controllers.Services
 
         public ImageParsingService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
+            Console.WriteLine("ImageParsingService constructor has been called!");
+
             _httpClientFactory = httpClientFactory;
             _apiUrl = configuration["VisionApiSettings:Url"] ?? "https://qwen-vision-api-196607509856.europe-west1.run.app/extract";
         }
 
 
-        public async Task<string> ParseImageAsync(Stream imageStream, string jsonKeys)
+        public async Task<string> ParseImageAsync(Stream imageStream, string contentType, string jsonKeys)
         {
             // Create an HttpClient instance
             using var httpClient = _httpClientFactory.CreateClient();
+
+            // Create the image content and explicitly set its Content-Type header
+            var imageContent = new StreamContent(imageStream);
+            imageContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
             //  Create the form-data content
             using var content = new MultipartFormDataContent();
 
             // Add the image stream to the content
             // The API expects a file part named "image"
-            content.Add(new StreamContent(imageStream), "image", "upload.jpg");
+            content.Add(imageContent, "image", "upload.jpg");
 
             // Add the JSON keys to the content
             // The API expects a form field named "json_keys"
