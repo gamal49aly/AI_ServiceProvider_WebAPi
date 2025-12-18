@@ -49,6 +49,14 @@ namespace AI_ServiceProvider
             // Keep your real image parsing service implementation
             builder.Services.AddScoped<IImageParsingService, ImageParsingService>();
             builder.Services.AddScoped<ISpeechToTextService, SpeechToTextService>();
+
+            builder.Services.AddHttpClient("TTSClient", client =>
+            {
+                client.Timeout = TimeSpan.FromMinutes(2);
+                client.DefaultRequestHeaders.Add("User-Agent", "AI-ServiceProvider");
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
             builder.Services.AddScoped<ITextToSpeechService, TextToSpeechService>();
 
             // CORS POLICY

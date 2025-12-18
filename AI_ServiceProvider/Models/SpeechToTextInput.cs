@@ -14,8 +14,8 @@ namespace AI_ServiceProvider.Models
         public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
         // This will store the raw audio data from the uploaded file
-        [MaxLength(20 * 1024 * 1024)] // Max 20MB
-        public byte[] AudioData { get; set; }
+        [MaxLength(1073741824)] // Max 20MB
+        public byte[]? AudioData { get; set; }
 
         // Optional: Store original filename and metadata
         [MaxLength(255)]

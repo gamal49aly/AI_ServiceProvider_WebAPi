@@ -2,6 +2,7 @@
 {
     public interface ITextToSpeechService
     {
-        Task<byte[]> ConvertTextToSpeechAsync(string text, string voiceSettingsJson);
+        Task<byte[]> SynthesizeSpeechAsync(string text, string voiceName);
+        IEnumerable<string> GetAvailableVoices();
     }
 }

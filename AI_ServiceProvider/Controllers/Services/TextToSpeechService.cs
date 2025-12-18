@@ -1,55 +1,110 @@
-﻿using System.Text;
+﻿using System.Net.Http;
+using System.Text;
 using System.Text.Json;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
 namespace AI_ServiceProvider.Controllers.Services
 {
-   
-        public class TextToSpeechService : ITextToSpeechService
+    public class TextToSpeechService : ITextToSpeechService
+    {
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<TextToSpeechService> _logger;
+        private readonly string _apiUrl;
+
+        private static readonly HashSet<string> ValidVoices = new(StringComparer.OrdinalIgnoreCase)
         {
-            private readonly IHttpClientFactory _httpClientFactory;
-            private readonly string _apiUrl;
+            "Zephyr", "Puck", "Charon", "Kore", "Fenrir", "Leda", "Orus",
+            "Aoede", "Callirrhoe", "Autonoe", "Enceladus", "Iapetus",
+            "Umbriel", "Algieba", "Despina", "Erinome", "Algenib",
+            "Rasalgethi", "Laomedeia", "Achernar", "Alnilam", "Schedar",
+            "Gacrux", "Pulcherrima", "Achird", "Zubenelgenubi",
+            "Vindemiatrix", "Sadachbia", "Sadaltager", "Sulafat"
+        };
 
-            public TextToSpeechService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public TextToSpeechService(
+            IHttpClientFactory httpClientFactory,
+            IConfiguration configuration,
+            ILogger<TextToSpeechService> logger)
+        {
+            _httpClientFactory = httpClientFactory;
+            _logger = logger;
+            _apiUrl = configuration["TextToSpeechApiSettings:Url"]
+                ?? throw new ArgumentNullException("TextToSpeechApiSettings:Url is not configured");
+        }
+
+        public async Task<byte[]> SynthesizeSpeechAsync(string text, string voiceName)
+        {
+            try
             {
-                Console.WriteLine("TextToSpeechService constructor has been called!");
-
-                _httpClientFactory = httpClientFactory;
-                _apiUrl = configuration["TextToSpeechApiSettings:Url"] ?? "https://your-tts-api-endpoint.com/synthesize";
-            }
-
-            public async Task<byte[]> ConvertTextToSpeechAsync(string text, string voiceSettingsJson)
-            {
-                // --- REPLACE THIS MOCK WITH YOUR AI API CALL ---
-                // This is a placeholder to test the flow.
-                // Your AI likely expects a JSON payload.
-                var requestBody = new { text = text, settings = voiceSettingsJson };
-                var jsonContent = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
-
-                // Create the HttpRequestMessage
-                var request = new HttpRequestMessage(HttpMethod.Post, _apiUrl)
+                if (!ValidVoices.Contains(voiceName))
                 {
-                    Content = jsonContent
-                };
+                    _logger.LogWarning("Invalid voice '{Voice}' requested, using default 'Kore'", voiceName);
+                    voiceName = "Kore";
+                }
 
-                // Send the request
+                _logger.LogInformation("Synthesizing speech with voice '{Voice}' for text length {Length}",
+                    voiceName, text.Length);
+
+                var requestBody = new { text, voice = voiceName };
+                var jsonString = JsonSerializer.Serialize(requestBody);
+
+                _logger.LogInformation("Sending to URL: {Url}", _apiUrl);
+
+                var jsonContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+                // ✅ Create client with timeout
                 using var httpClient = _httpClientFactory.CreateClient();
-                HttpResponseMessage response = await httpClient.SendAsync(request);
+                httpClient.Timeout = TimeSpan.FromMinutes(2); // 2 minute timeout
+
+                var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+                _logger.LogInformation("Sending POST request...");
+                var response = await httpClient.PostAsync(_apiUrl, jsonContent);
+
+                stopwatch.Stop();
+                _logger.LogInformation("Response received in {ElapsedMs}ms with status {StatusCode}",
+                    stopwatch.ElapsedMilliseconds, response.StatusCode);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Assuming your API returns raw audio bytes in the response body
-                    return await response.Content.ReadAsByteArrayAsync();
+                    var audioBytes = await response.Content.ReadAsByteArrayAsync();
+                    _logger.LogInformation("Successfully synthesized {Size} bytes of audio", audioBytes.Length);
+
+                    if (audioBytes.Length == 0)
+                    {
+                        throw new HttpRequestException("Received empty audio data from TTS API");
+                    }
+
+                    return audioBytes;
                 }
-                else
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new HttpRequestException($"TTS API request failed with status code {response.StatusCode}: {errorContent}");
-                }
-             
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("TTS API failed with status {Status}: {Error}",
+                    response.StatusCode, errorContent);
+
+                throw new HttpRequestException(
+                    $"TTS API request failed with status code {response.StatusCode}: {errorContent}"
+                );
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex, "TTS API request timed out");
+                throw new HttpRequestException("TTS API request timed out. The service may be unreachable.", ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "HTTP request failed");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during speech synthesis");
+                throw;
             }
         }
 
+        public IEnumerable<string> GetAvailableVoices()
+        {
+            return ValidVoices.OrderBy(v => v);
+        }
     }
-
+}

@@ -1,11 +1,11 @@
-﻿using AI_ServiceProvider.Data;
+﻿using AI_ServiceProvider.Controllers.Services;
+using AI_ServiceProvider.Data;
 using AI_ServiceProvider.DTOs;
 using AI_ServiceProvider.Models;
-using AI_ServiceProvider.Controllers.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace AI_ServiceProvider.Controllers
 {
@@ -16,83 +16,103 @@ namespace AI_ServiceProvider.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ITextToSpeechService _textToSpeechService;
+        private readonly ILogger<TextToSpeechController> _logger;
 
-        public TextToSpeechController(ApplicationDbContext context, ITextToSpeechService textToSpeechService)
+        public TextToSpeechController(
+            ApplicationDbContext context,
+            ITextToSpeechService textToSpeechService,
+            ILogger<TextToSpeechController> logger)
         {
             _context = context;
             _textToSpeechService = textToSpeechService;
+            _logger = logger;
         }
 
         [HttpPost("synthesize")]
-        public async Task<IActionResult> SynthesizeText([FromBody] TextToSpeechRequestDto request)
+        public async Task<IActionResult> SynthesizeSpeech([FromBody] TextToSpeechRequestDto request)
         {
-            // 1. Authenticate User
-            var userId = GetUserId();
-            if (userId == null) return Unauthorized();
-
-            // 2. Validate Chat Ownership
-            var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == request.ChatId && c.UserId == userId);
-            if (chat == null) return NotFound("Chat not found or you do not have access.");
-
-            // 3. Check Subscription Limits
-            if (!await HasUsageCredits(userId.Value))
+            try
             {
-                return Forbid("You have reached your monthly usage limit.");
+                // 1. Authenticate User
+                var userIdNullable = GetUserId();
+                if (userIdNullable == null) return Unauthorized();
+                var userId = userIdNullable.Value;
+
+                // 2. Validate Chat Ownership
+                var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == request.ChatId && c.UserId == userId);
+                if (chat == null) return NotFound("Chat not found or you do not have access.");
+
+                // 3. Check usage credits
+                if (!await HasUsageCredits(userId))
+                {
+                    return BadRequest("Usage limit exceeded for this month.");
+                }
+
+                // 4. Call the Text-to-Speech Service
+                _logger.LogInformation("Calling TTS service for user {UserId}", userId);
+                var audioBytes = await _textToSpeechService.SynthesizeSpeechAsync(request.Text, request.Voice);
+                _logger.LogInformation("Received {Size} bytes from TTS service", audioBytes.Length);
+
+                // 5. Save the Results to the Database
+                var input = new TextToSpeechInput
+                {
+                    ChatId = request.ChatId,
+                    InputText = request.Text,
+                    VoiceName = request.Voice,
+                    AudioData = audioBytes  // ✅ Store the audio
+                };
+                _context.TextToSpeechInputs.Add(input);
+                await _context.SaveChangesAsync();
+
+                var output = new TextToSpeechOutput
+                {
+                    InputId = input.Id
+                };
+                _context.TextToSpeechOutputs.Add(output);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Saved TTS records to database with InputId {InputId}", input.Id);
+
+                // 6. Return the MP3 audio file directly
+                return File(audioBytes, "audio/mpeg", $"speech_{input.Id}.mp3");
             }
-
-            // 4. Call the Text-to-Speech Service
-            var audioBytes = await _textToSpeechService.ConvertTextToSpeechAsync(request.Text, request.VoiceSettings);
-
-            // 5. Save the Results to the Database
-            var input = new TextToSpeechInput
+            catch (HttpRequestException ex)
             {
-                ChatId = request.ChatId,
-                InputText = request.Text,
-                VoiceSettings = request.VoiceSettings
-            };
-            _context.TextToSpeechInputs.Add(input);
-            await _context.SaveChangesAsync(); // Save first to get the InputId
-
-            var output = new TextToSpeechOutput
+                _logger.LogError(ex, "TTS service error");
+                return StatusCode(500, new { error = "TTS service error", detail = ex.Message });
+            }
+            catch (Exception ex)
             {
-                InputId = input.Id,
-                AudioData = audioBytes // Store the raw byte array from the service
-            };
-            _context.TextToSpeechOutputs.Add(output);
-            await _context.SaveChangesAsync(); // Save the output
-
-            // 6. Prepare and Return the Response
-            var audioDataBase64 = Convert.ToBase64String(audioBytes);
-            return Ok(new TextToSpeechResponseDTO { InputId = input.Id, AudioDataBase64 = audioDataBase64 });
+                _logger.LogError(ex, "Unexpected error in SynthesizeSpeech");
+                return StatusCode(500, new { error = "An unexpected error occurred", detail = ex.Message });
+            }
         }
 
-        private Guid? GetUserId()
+        [HttpGet("voices")]
+        public IActionResult GetAvailableVoices()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
+            var voices = _textToSpeechService.GetAvailableVoices();
+            return Ok(voices);
         }
 
         private async Task<bool> HasUsageCredits(Guid userId)
         {
             var user = await _context.Users.Include(u => u.Subscription).FirstOrDefaultAsync(u => u.Id == userId);
             if (user?.Subscription == null) return false;
+            if (user.Subscription.MaxUsagePerMonth == -1) return true;
 
-            if (user.Subscription.MaxUsagePerMonth == -1) return true; // Unlimited
-
-            // Count usage from BOTH ImageParser and Text-to-Speech for the current month
-            var imageUsage = await _context.ImageParserInputs
+            var currentUsage = await _context.TextToSpeechInputs
                 .CountAsync(i => i.Chat.UserId == userId &&
-                                 i.UploadedAt.Year == DateTime.UtcNow.Year &&
-                                 i.UploadedAt.Month == DateTime.UtcNow.Month);
+                                 i.CreatedAt.Year == DateTime.UtcNow.Year &&
+                                 i.CreatedAt.Month == DateTime.UtcNow.Month);
 
-            var textToSpeechUsage = await _context.TextToSpeechInputs
-                .CountAsync(t => t.Chat.UserId == userId && // Note the navigation path
-                                 t.CreatedAt.Year == DateTime.UtcNow.Year &&
-                                 t.CreatedAt.Month == DateTime.UtcNow.Month);
+            return currentUsage < user.Subscription.MaxUsagePerMonth;
+        }
 
-            var totalUsage = imageUsage + textToSpeechUsage;
-
-            return totalUsage < user.Subscription.MaxUsagePerMonth;
+        private Guid? GetUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace AI_ServiceProvider.Data
         public DbSet<TextToSpeechOutput> TextToSpeechOutputs { get; set; }
         public DbSet<SpeechToTextInput> SpeechToTextInputs { get; set; }
         public DbSet<SpeechToTextOutput> SpeechToTextOutputs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
