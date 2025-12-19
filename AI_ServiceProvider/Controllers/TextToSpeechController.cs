@@ -101,9 +101,9 @@ namespace AI_ServiceProvider.Controllers
             var userId = GetUserId();
             if (userId == null) return Unauthorized();
 
-            var chats = await _context.TextToSpeechInputs
+            List<ChatResponseDto> chats = await _context.TextToSpeechInputs
                 .Where(i => i.Chat.UserId == userId)
-                .Select(i => new
+                .Select(i => new ChatResponseDto
                 {
                     Id = i.ChatId,
                     Name = i.Chat.Name,
@@ -119,18 +119,18 @@ namespace AI_ServiceProvider.Controllers
         [HttpGet("history/{chatId}")]
         public async Task<IActionResult> GetTextToSpeechHistory(Guid chatId)
         {
-            var userId = GetUserId();
+            Guid? userId = GetUserId();
             if (userId == null) return Unauthorized();
 
             // Verify chat ownership
             var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == chatId && c.UserId == userId);
             if (chat == null) return NotFound("Chat not found or you do not have access.");
 
-            var history = await _context.TextToSpeechInputs
+            List<TextToSpeechHistoryRowDTO> history = await _context.TextToSpeechInputs
                 .Where(i => i.ChatId == chatId)
                 .Include(i => i.Output)
                 .OrderBy(i => i.CreatedAt)
-                .Select(i => new
+                .Select(i => new TextToSpeechHistoryRowDTO
                 {
                     InputId = i.Id,
                     InputText = i.InputText,
