@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
+using System.Security.Claims;
 
 namespace AI_ServiceProvider.Controllers
 {
@@ -91,7 +92,7 @@ namespace AI_ServiceProvider.Controllers
             try
             {
                 // Validate user
-                var userIdClaim = User.FindFirst("id")?.Value;
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim))
                     return Unauthorized("User ID missing in token");
 
