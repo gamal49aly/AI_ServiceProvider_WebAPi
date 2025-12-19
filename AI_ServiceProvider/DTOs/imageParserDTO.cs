@@ -10,7 +10,7 @@ namespace AI_ServiceProvider.DTOs
         [Required]
         public Guid ChatId { get; set; }
 
-        [ImageFile(maxFileSizeInMB: 10)]
+        [ImageFile(maxFileSizeInMB: 20)]
         [Required]
         public IFormFile Image { get; set; }
 

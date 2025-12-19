@@ -12,7 +12,7 @@ namespace AI_ServiceProvider.DTOs
 
         // The audio file from the client
         [Required]
-        [AudioFile(maxFileSizeInMB:10)]
+        [AudioFile(maxFileSizeInMB:1024)]
         public IFormFile AudioFile { get; set; }
     }
 
