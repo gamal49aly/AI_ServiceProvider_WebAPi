@@ -79,6 +79,55 @@ namespace AI_ServiceProvider.Controllers
             return Ok(new SpeechToTextResponseDto { InputId = input.Id, TranscribedText = output.TranscribedText });
         }
 
+        [HttpGet("chats")]
+        public async Task<IActionResult> GetSpeechToTextChats()
+        {
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            var chats = await _context.SpeechToTextInputs
+                .Where(i => i.Chat.UserId == userId)
+                .Select(i => new
+                {
+                    Id = i.ChatId,
+                    Name = i.Chat.Name,
+                    CreatedAt = i.Chat.CreatedAt
+                })
+                .Distinct()
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
+
+            return Ok(chats);
+        }
+
+        [HttpGet("history/{chatId}")]
+        public async Task<IActionResult> GetSpeechToTextHistory(Guid chatId)
+        {
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            // Verify chat ownership
+            var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == chatId && c.UserId == userId);
+            if (chat == null) return NotFound("Chat not found or you do not have access.");
+
+            var history = await _context.SpeechToTextInputs
+                .Where(i => i.ChatId == chatId)
+                .Include(i => i.Output)
+                .OrderBy(i => i.UploadedAt)
+                .Select(i => new
+                {
+                    InputId = i.Id,
+                    OriginalFileName = i.OriginalFileName,
+                    AudioData = i.AudioData, // Returns the audio bytes
+                    UploadedAt = i.UploadedAt,
+                    TranscribedText = i.Output != null ? i.Output.TranscribedText : null,
+                    GeneratedAt = i.Output != null ? i.Output.GeneratedAt : (DateTime?)null
+                })
+                .ToListAsync();
+
+            return Ok(history);
+        }
+
         private Guid? GetUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

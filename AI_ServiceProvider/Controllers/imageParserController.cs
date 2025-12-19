@@ -82,6 +82,55 @@ namespace AI_ServiceProvider.Controllers
             return Ok(responseOutput);
         }
 
+        [HttpGet("chats")]
+        public async Task<IActionResult> GetImageParserChats()
+        {
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            var chats = await _context.ImageParserInputs
+                .Where(i => i.Chat.UserId == userId)
+                .Select(i => new
+                {
+                    Id = i.ChatId,
+                    Name = i.Chat.Name,
+                    CreatedAt = i.Chat.CreatedAt
+                })
+                .Distinct()
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
+
+            return Ok(chats);
+        }
+
+        [HttpGet("history/{chatId}")]
+        public async Task<IActionResult> GetImageParserHistory(Guid chatId)
+        {
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            // Verify chat ownership
+            var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == chatId && c.UserId == userId);
+            if (chat == null) return NotFound("Chat not found or you do not have access.");
+
+            var history = await _context.ImageParserInputs
+                .Where(i => i.ChatId == chatId)
+                .Include(i => i.Output)
+                .OrderBy(i => i.UploadedAt)
+                .Select(i => new
+                {
+                    InputId = i.Id,
+                    ImageUrl = i.ImageUrl,
+                    JsonSchema = i.JsonSchema,
+                    UploadedAt = i.UploadedAt,
+                    ParsedData = i.Output != null ? i.Output.ParsedData : null,
+                    GeneratedAt = i.Output != null ? i.Output.GeneratedAt : (DateTime?)null
+                })
+                .ToListAsync();
+
+            return Ok(history);
+        }
+
         private Guid? GetUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
