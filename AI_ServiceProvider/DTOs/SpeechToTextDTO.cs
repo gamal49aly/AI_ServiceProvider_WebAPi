@@ -1,4 +1,5 @@
 ﻿using AI_ServiceProvider.Models;
+using AI_ServiceProvider.Validators;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +12,7 @@ namespace AI_ServiceProvider.DTOs
 
         // The audio file from the client
         [Required]
+        [AudioFile(maxFileSizeInMB:1024)]
         public IFormFile AudioFile { get; set; }
     }
 
