@@ -117,7 +117,7 @@ namespace AI_ServiceProvider.Controllers
                 .Where(i => i.ChatId == chatId)
                 .Include(i => i.Output)
                 .OrderBy(i => i.UploadedAt)
-                .Select(i => new
+                .Select(i => new ImageParserHistoryRow
                 {
                     InputId = i.Id,
                     ImageUrl = i.ImageUrl,

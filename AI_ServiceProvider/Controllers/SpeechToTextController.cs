@@ -85,9 +85,9 @@ namespace AI_ServiceProvider.Controllers
             var userId = GetUserId();
             if (userId == null) return Unauthorized();
 
-            var chats = await _context.SpeechToTextInputs
+            List<ChatResponseDto> chats = await _context.SpeechToTextInputs
                 .Where(i => i.Chat.UserId == userId)
-                .Select(i => new
+                .Select(i => new ChatResponseDto
                 {
                     Id = i.ChatId,
                     Name = i.Chat.Name,
@@ -110,11 +110,11 @@ namespace AI_ServiceProvider.Controllers
             var chat = await _context.Chats.FirstOrDefaultAsync(c => c.Id == chatId && c.UserId == userId);
             if (chat == null) return NotFound("Chat not found or you do not have access.");
 
-            var history = await _context.SpeechToTextInputs
+            List<SpeechToTextRowDTO> history = await _context.SpeechToTextInputs
                 .Where(i => i.ChatId == chatId)
                 .Include(i => i.Output)
                 .OrderBy(i => i.UploadedAt)
-                .Select(i => new
+                .Select(i => new SpeechToTextRowDTO
                 {
                     InputId = i.Id,
                     OriginalFileName = i.OriginalFileName,
