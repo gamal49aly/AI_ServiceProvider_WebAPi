@@ -1,4 +1,5 @@
-﻿using AI_ServiceProvider.Data;
+﻿
+using AI_ServiceProvider.Data;
 using AI_ServiceProvider.DTOs;
 using AI_ServiceProvider.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -9,10 +10,9 @@ using AI_ServiceProvider.Controllers.Services;
 
 
 
-
 namespace AI_ServiceProvider.Controllers
 {
-  
+
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -32,6 +32,7 @@ namespace AI_ServiceProvider.Controllers
         [HttpPost("parse")]
         public async Task<IActionResult> ParseImage([FromForm] ParseImageRequestDto request)
         {
+
             var userId = GetUserId();
             if (userId == null) return Unauthorized();
 
@@ -42,7 +43,7 @@ namespace AI_ServiceProvider.Controllers
             //  Check Subscription Limits
             if (!await HasUsageCredits(userId.Value))
             {
-                return Forbid("You have reached your monthly usage limit.");
+                return StatusCode(403, "You have reached your monthly usage limit.");
             }
 
             //  Send Image Bytes to AI Model for Parsing
@@ -71,15 +72,14 @@ namespace AI_ServiceProvider.Controllers
             //_context.ImageParserInputs.Add(input);
             //await _context.SaveChangesAsync();
 
-            //var output = new ImageParserOutput
-            //{
-            //    InputId = input.Id,
-            //    ParsedData = aiResponse
-            //};
             //_context.ImageParserOutputs.Add(output);
             //await _context.SaveChangesAsync();
-
-            return Ok(aiResponse);
+            var responseOutput = new ParseImageResponseDto
+            {
+                InputId = request.ChatId,
+                ParsedData = aiResponse
+            };
+            return Ok(responseOutput);
         }
 
         private Guid? GetUserId()
