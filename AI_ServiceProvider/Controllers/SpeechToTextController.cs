@@ -38,7 +38,7 @@ namespace AI_ServiceProvider.Controllers
             // Check Subscription Limits
             if (!await HasUsageCredits(userId.Value))
             {
-                return Forbid("You have reached your monthly usage limit.");
+                return StatusCode(403, "You have reached your monthly usage limit.");
             }
 
             // Read the uploaded audio file into a byte array

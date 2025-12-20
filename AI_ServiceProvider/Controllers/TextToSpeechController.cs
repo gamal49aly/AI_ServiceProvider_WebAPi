@@ -45,7 +45,7 @@ namespace AI_ServiceProvider.Controllers
                 // 3. Check usage credits
                 if (!await HasUsageCredits(userId))
                 {
-                    return BadRequest("Usage limit exceeded for this month.");
+                    return StatusCode(403, "You have reached your monthly usage limit.");
                 }
 
                 // 4. Call the Text-to-Speech Service
