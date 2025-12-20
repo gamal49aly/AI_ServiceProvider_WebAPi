@@ -63,17 +63,24 @@ namespace AI_ServiceProvider.Controllers
             //}
 
             ////Save Results to Database
-            //var input = new ImageParserInput
-            //{
-            //    ChatId = request.ChatId,
-            //    ImageUrl = imageUrl,
-            //    JsonSchema = request.JsonKeys
-            //};
-            //_context.ImageParserInputs.Add(input);
-            //await _context.SaveChangesAsync();
+            var input = new ImageParserInput
+            {
+                ChatId = request.ChatId,
+                JsonSchema = request.JsonKeys
+                //ImageUrl = imageUrl,
+            };
+            _context.ImageParserInputs.Add(input);
+            await _context.SaveChangesAsync();
 
-            //_context.ImageParserOutputs.Add(output);
-            //await _context.SaveChangesAsync();
+            var output = new ImageParserOutput
+            {
+                InputId = input.Id,
+                ParsedData = aiResponse,
+                GeneratedAt = DateTime.UtcNow
+            };
+
+            _context.ImageParserOutputs.Add(output);
+            await _context.SaveChangesAsync();
             var responseOutput = new ParseImageResponseDto
             {
                 InputId = request.ChatId,
