@@ -14,9 +14,9 @@ namespace AI_ServiceProvider.Models
 
         public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
-        [Required]
+        
         [MaxLength(500)]
-        public string ImageUrl { get; set; } // URL from Google Drive for history
+        public string? ImageUrl { get; set; } // URL from Google Drive for history
 
         public string? JsonSchema { get; set; } // The keys the user wanted to extract
 
